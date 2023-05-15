@@ -1,0 +1,108 @@
+[
+    {
+        "id": "12341asdsa123",
+        "username": "daniel123",
+        "password": "notrealpass",
+        "admin": 1,
+        "firstname": "daniel",
+        "lastname": "vorobey",
+        "email": "some@mail.com",
+        "country": "Israel",
+        "state": "north",
+        "address": {
+            "city": "somecity",
+            "street": "blabla",
+            "house_num": "7",
+            "zip": "12345"
+        },
+        "registration_ip": "123.123.123",
+        "registration_date": "15/12/12",
+        "last_login_date": "11/11/13",
+        "last_login_ip": "123.123.123"
+    },
+    {
+        "id": "asf451klm236",
+        "username": "johndoe123",
+        "password": "securepass",
+        "admin": 0,
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "johndoe@example.com",
+        "country": "Israel",
+        "state": "Tel Aviv",
+        "address": {
+            "city": "Tel Aviv",
+            "street": "Main Street",
+            "house_num": "10",
+            "zip": "12345"
+        },
+        "registration_ip": "127.0.0.1",
+        "registration_date": "15/01/2023",
+        "last_login_date": "20/05/2023",
+        "last_login_ip": "192.168.0.1"
+    },
+    {
+        "id": "kldfja98654",
+        "username": "sarahsmith",
+        "password": "strongpassword",
+        "admin": 1,
+        "firstname": "Sarah",
+        "lastname": "Smith",
+        "email": "sarahsmith@example.com",
+        "country": "Israel",
+        "state": "Haifa",
+        "address": {
+            "city": "Haifa",
+            "street": "Oak Avenue",
+            "house_num": "25",
+            "zip": "54321"
+        },
+        "registration_ip": "192.168.1.1",
+        "registration_date": "03/02/2023",
+        "last_login_date": "18/05/2023",
+        "last_login_ip": "10.0.0.1"
+    },
+    {
+        "id": "pqweu1234as5",
+        "username": "alexander",
+        "password": "mypassword123",
+        "admin": 0,
+        "firstname": "Alexander",
+        "lastname": "Gordon",
+        "email": "alexander@example.com",
+        "country": "Israel",
+        "state": "Jerusalem",
+        "address": {
+            "city": "Jerusalem",
+            "street": "Cedar Street",
+            "house_num": "7",
+            "zip": "98765"
+        },
+        "registration_ip": "172.16.0.1",
+        "registration_date": "09/03/2023",
+        "last_login_date": "21/05/2023",
+        "last_login_ip": "192.168.0.10"
+    },
+    {
+        "id": "p09876fgh543",
+        "username": "emilybrown",
+        "password": "secretpass123",
+        "admin": 0,
+        "firstname": "Emily",
+        "lastname": "Brown",
+        "email": "emilybrown@example.com",
+        "country": "Israel",
+        "state": "Tel Aviv",
+        "address": {
+            "city": "Tel Aviv",
+            "street": "Garden Street",
+            "house_num": "15",
+            "zip": "67890"
+        },
+        "registration_ip": "192.168.2.1",
+        "registration_date": "17/04/2023",
+        "last_login_date": "19/05/2023",
+        "last_login_ip": "192.168.1.1"
+    }
+
+]
