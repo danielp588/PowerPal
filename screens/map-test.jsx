@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import { StyleSheet, View, Text} from 'react-native';
 import * as Location from 'expo-location';
 
@@ -33,9 +33,10 @@ export default function Map() {
   return (
     <View>
       {
-        location && <MapView style={styles.map} initialRegion={{latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421}}/>
+        location && <MapView style={styles.map} initialRegion={{latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421}}>
+          <Marker title="mashu stringy :)" coordinate={{latitude: location.coords.latitude, longitude: location.coords.longitude}}/>
+        </MapView>
       }
-      
     </View>
   );
 }
