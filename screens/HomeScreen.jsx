@@ -5,6 +5,11 @@ export default function HomeScreen() {
   return (
     <View>
       <Text>Aeste</Text>
+      <Text>Aeste</Text>
+      <Text>Aeste</Text>
+      <Text>Aeste</Text>
+      <Text>Aeste</Text>
+      <Text>Aeste</Text>
     </View>
   )
 }
