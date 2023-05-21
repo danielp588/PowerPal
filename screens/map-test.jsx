@@ -8,6 +8,8 @@ export default function Map() {
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
+    
+    //todo create this as function
     (async () => {
       
       let { status } = await Location.requestForegroundPermissionsAsync();
