@@ -25,7 +25,7 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarLabel: "profile",
+          tabBarLabel: "Profile",
           tabBarIcon: ({ focused }) => {
             let focusedColor;
             focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
@@ -39,7 +39,7 @@ const TabNavigator = () => {
         name="MyStations"
         component={MyStationsScreen}
         options={{
-          tabBarLabel: "my stations",
+          tabBarLabel: "My Stations",
           tabBarIcon: ({ focused }) => {
             let focusedColor;
             focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
@@ -58,7 +58,7 @@ const TabNavigator = () => {
         name="Map"
         component={MapScreen}
         options={{
-          tabBarLabel: "map",
+          tabBarLabel: "Map",
           tabBarIcon: ({ focused }) => {
             let focusedColor;
             focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
@@ -72,7 +72,7 @@ const TabNavigator = () => {
         name="Menu"
         component={MenuScreen}
         options={{
-          tabBarLabel: "menu",
+          tabBarLabel: "Menu",
           tabBarIcon: ({ focused }) => {
             let focusedColor;
             focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
