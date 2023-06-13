@@ -6,8 +6,11 @@ import { Ionicons } from "@expo/vector-icons";
 import MapScreen from "../screens/MapScreen";
 import MyStationsScreen from "../screens/MyStationsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+<<<<<<< Updated upstream
 import { UserContext } from "../contexts/UserContext";
 import LoginScreen from "../screens/LoginScreen";
+=======
+>>>>>>> Stashed changes
 import DrawerNavigator from "./DrawerNavigator";
 
 const Tab = createBottomTabNavigator();

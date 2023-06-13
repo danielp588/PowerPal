@@ -4,7 +4,7 @@ import React from 'react'
 const MyStations = () => {
   return (
     <View>
-      <Text>MyStations</Text>
+      <Text>MyStationsScreen</Text>
     </View>
   )
 }
