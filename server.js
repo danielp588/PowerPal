@@ -1,12 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const User = require('./models/userModel');
-const Station = require('./models/stationModel');
+require("dotenv").config();
+
+const express = require("express");
+const mongoose = require("mongoose");
+const User = require("./models/userModel");
+const Station = require("./models/stationModel");
 const server = express();
-
-server.use(express.json());
-
-const URI = 'mongodb+srv://admin:dladmin123@cluster0.24c4gr0.mongodb.net/PowerPal-API?retryWrites=true&w=majority';
 
 async function connect() {
     try {
@@ -41,44 +39,11 @@ server.post('/add-user', (req, res) => {
         });
 });
 
-//Add station to db
-server.post('/add-station', (req, res) => {
-    const station = new Station({
-        name: req.body.name,
-        latitude: req.body.latitude,
-        longitude: req.body.longitude
-    })
-    station.save() //Saves to db
-        .then(data => {
-            console.log(data);
-            res.send("station added");
-        }).catch(error => {
-            console.error(error);
-        });
-});
+server.use(express.json());
 
-server.get('/users', (req, res) => {
-    User.find() // Fetch all users from the sser collection
-        .then(users => {
-            res.json(users); // Send the users as a JSON response
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(500).json({
-                error: 'Internal Server Error'
-            });
-        });
-});
+//Routes
+const userRouter = require("./routes/userRoutes");
+server.use("/users", userRouter);
 
-server.get('/stations', (req, res) => {
-    Station.find() // Fetch all stations from the station collection
-        .then(stations => {
-            res.json(stations); // Send the station as a JSON response
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(500).json({
-                error: 'Internal Server Error'
-            });
-        });
-});
+const stationRouter = require("./routes/stationRouters");
+server.use("/stations", stationRouter);

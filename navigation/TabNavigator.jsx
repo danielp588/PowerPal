@@ -5,10 +5,10 @@ import { Ionicons } from "@expo/vector-icons";
 
 import MapScreen from "../screens/MapScreen";
 import MyStationsScreen from "../screens/MyStationsScreen";
-import MenuScreen from "../screens/MenuScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { UserContext } from "../contexts/UserContext";
 import LoginScreen from "../screens/LoginScreen";
+import DrawerNavigator from "./DrawerNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -82,12 +82,11 @@ const TabNavigator = () => {
             />
       }
 
-
       <Tab.Screen
         name="Map"
         component={MapScreen}
         options={{
-          tabBarLabel: "Map",
+          tabBarLabel: "map",
           tabBarIcon: ({ focused }) => {
             let focusedColor;
             focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
@@ -99,9 +98,9 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Menu"
-        component={MenuScreen}
+        component={DrawerNavigator}
         options={{
-          tabBarLabel: "Menu",
+          tabBarLabel: "menu",
           tabBarIcon: ({ focused }) => {
             let focusedColor;
             focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
