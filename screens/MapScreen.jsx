@@ -23,9 +23,7 @@ export default function Map() {
   const LoadStations = async () => {
     console.log("Loading stations from mongoDB");
     try {
-      //expo cant read 'localhost' adress, so i switched to my ip adress for
-      //the connection to work. might be different on other machines. port is still 3000
-      let res = await fetch("http://192.168.1.22:3000/stations");
+      let res = await fetch("https://powerpal-ij11.onrender.com/stations");
       let data = await res.json();
       setStations(data);
       console.log("Stations data loaded from mongoDB successfuly")
