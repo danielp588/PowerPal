@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -7,10 +7,15 @@ import MapScreen from "../screens/MapScreen";
 import MyStationsScreen from "../screens/MyStationsScreen";
 import MenuScreen from "../screens/MenuScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import { UserContext } from "../contexts/UserContext";
+import LoginScreen from "../screens/LoginScreen";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+
+  const { currentUser } = useContext(UserContext);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -21,38 +26,62 @@ const TabNavigator = () => {
       }}
       initialRouteName="Map"
     >
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: "Profile",
-          tabBarIcon: ({ focused }) => {
-            let focusedColor;
-            focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
-            return (
-              <Ionicons name="person-outline" color={focusedColor} size={28} />
-            );
-          },
-        }}
-      />
-      <Tab.Screen
-        name="MyStations"
-        component={MyStationsScreen}
-        options={{
-          tabBarLabel: "My Stations",
-          tabBarIcon: ({ focused }) => {
-            let focusedColor;
-            focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
-            return (
-              <Ionicons
-                name="location-outline"
-                color={focusedColor}
-                size={28}
-              />
-            );
-          },
-        }}
-      />
+
+      {
+        currentUser
+          ?
+          <>
+            <Tab.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                tabBarLabel: "Profile",
+                tabBarIcon: ({ focused }) => {
+                  let focusedColor;
+                  focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
+                  return (
+                    <Ionicons name="person-outline" color={focusedColor} size={28} />
+                  );
+                },
+              }}
+            />
+
+            <Tab.Screen
+              name="MyStations"
+              component={MyStationsScreen}
+              options={{
+                tabBarLabel: "My Stations",
+                tabBarIcon: ({ focused }) => {
+                  let focusedColor;
+                  focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
+                  return (
+                    <Ionicons
+                      name="location-outline"
+                      color={focusedColor}
+                      size={28}
+                    />
+                  );
+                },
+              }}
+            />
+          </>
+          :
+          <Tab.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                tabBarLabel: "Login",
+                tabBarIcon: ({ focused }) => {
+                  let focusedColor;
+                  focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
+                  return (
+                    <Ionicons name="person-outline" color={focusedColor} size={28} />
+                  );
+                },
+              }}
+            />
+      }
+
 
       <Tab.Screen
         name="Map"

@@ -11,7 +11,7 @@ const URI = 'mongodb+srv://admin:dladmin123@cluster0.24c4gr0.mongodb.net/PowerPa
 async function connect() {
     try {
         await mongoose.connect(URI);
-        console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB!");
     } catch (error) {
         console.error(error);
     }
@@ -20,7 +20,7 @@ async function connect() {
 connect();
 
 server.listen(3000, () => {
-    console.log("Server listening on port 3000");
+    console.log("Server listening on port 3000!");
 })
 
 //Adding user to db
