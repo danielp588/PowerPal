@@ -1,14 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet,View, Text } from "react-native";
+import React from "react";
 
-const Menu = () => {
+export default function MenuScreen() {
   return (
     <View>
-      <Text>Menu screen</Text>
+      <Text style={styles.header}>Menu</Text>
     </View>
   );
-};
+}
 
-export default Menu;
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  header: {
+    fontWeight: "bold",
+    marginTop: 30,
+    marginBottom: 10,
+    marginLeft: 12,
+    fontSize: 35,
+    textAlign: "left",
+  },
+});

@@ -1,81 +1,106 @@
-import { View, Text, TextInput, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native'
-import React, {useContext, useState} from 'react'
-import { UserContext } from '../contexts/UserContext';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+import React, { useContext, useState } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen() {
+  const navigaton = useNavigation();
 
-    const [username, setUsername] = useState();
-    const [password, setPassword] = useState();
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+  const [loginMsg, setLoginMsg] = useState("");
 
-    const {authenticateUser, currentUser} = useContext(UserContext);
-    function handleAuthenticateUser(){
-        authenticateUser(username, password);
-        currentUser ? alert(`Welcome ${currentUser.username}`) : alert(`Invalid credentials!`);
+  const { authenticateUser, currentUser } = useContext(UserContext);
+
+  async function handleAuthenticateUser() {
+    try {
+      setLoginMsg("");
+      await authenticateUser(username, password);
+      currentUser ? setLoginMsg("") : setLoginMsg("Try again");
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  function handleSignUp() {
+    navigaton.navigate("SignUpScreen");
+  }
 
   return (
     <View>
       <Text style={styles.header}>Login</Text>
       <SafeAreaView>
-      <TextInput
-        style={styles.input}
-        onChangeText={setUsername}
-        placeholder="Username"
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry={true}
-      />
-      <TouchableOpacity onPress={handleAuthenticateUser}>
-        <View style={styles.button}>
-            <Text style={styles.buttontext}>Login</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setUsername}
+          placeholder="Username"
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={setPassword}
+          placeholder="Password"
+          secureTextEntry={true}
+        />
+        <Text style={styles.msgText}>{loginMsg}</Text>
+        <View style={{marginHorizontal: 12}}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "#4ECB71" }]}
+            onPress={handleAuthenticateUser}
+          >
+            <View>
+              <Text style={styles.buttontext}>Login</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <View>
+              <Text style={styles.buttontext}>Sign up</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <View style={styles.button2}>
-            <Text style={styles.buttontext}>Sign Up</Text>
-        </View>
-      </TouchableOpacity>
-    </SafeAreaView>
+      </SafeAreaView>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-    header:{
-        marginTop: 35,
-        fontSize: 35,
-        textAlign: 'center'
-    },
-    input: {
-      height: 40,
-      margin: 12,
-      borderWidth: 1,
-      padding: 10,
-    },
-    button:{
-        padding: 20,
-        backgroundColor: '#4ecb71',
-        fontSize: 22,
-        width: 200,
-        alignSelf: 'center',
-        margin: 25,
-        borderRadius: 10
-    },
-    button2:{
-        padding: 15,
-        backgroundColor: '#070033',
-        fontSize: 22,
-        width: 200,
-        alignSelf: 'center',
-        margin: 25,
-        borderRadius: 10
-    },
-    buttontext:{
-        color:'#FFF',
-        textAlign: 'center',
-        fontSize: 22,
-    }
-  });
+  header: {
+    marginTop: 35,
+    marginLeft: 12,
+    fontSize: 35,
+    textAlign: "left",
+    fontWeight: "bold",
+  },
+  msgText: {
+    marginLeft: 12,
+    fontSize: 16,
+    color: "red",
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 30,
+  },
+  button: {
+    padding: 15,
+    backgroundColor: "#476BE6",
+    fontSize: 16,
+    width: "100%",
+    alignSelf: "center",
+    margin: 10,
+    borderRadius: 30,
+  },
+  buttontext: {
+    color: "#FFF",
+    textAlign: "center",
+    fontSize: 22,
+  },
+});

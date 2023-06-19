@@ -29,7 +29,7 @@ export default function Map() {
     try {
       //fetching GAS STATIONS, not electric car stations - just for practice from external API
       let res = await fetch(
-        "https://data.gov.il/api/3/action/datastore_search?resource_id=ef1d80ed-caa3-4ef8-a987-83ea2849ccaa&limit=5"
+        "https://data.gov.il/api/3/action/datastore_search?resource_id=ef1d80ed-caa3-4ef8-a987-83ea2849ccaa&limit=20"
       );
       let data = await res.json();
       setStations(data.result.records);
