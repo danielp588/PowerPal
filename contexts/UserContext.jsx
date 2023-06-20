@@ -39,8 +39,8 @@ export default function UserContextProvider({ children }) {
   async function registerUser(username, password, firstname, lastname, email) {
     try {
       console.log("Attempting to sign up...");
-
-      let data = { username, password, firstname, lastname, email };
+      let email_lowercase = email.toLowerCase();
+      let data = { username, password, firstname, lastname, email_lowercase };
       let res = await fetch(
         "https://powerpal-ij11.onrender.com/api/users/register",
         {
