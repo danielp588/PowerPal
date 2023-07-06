@@ -7,109 +7,74 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext} from "react";
 import { UserContext } from "../contexts/UserContext";
-import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
+
   const { currentUser, setCurrentUser } = useContext(UserContext);
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-
-  const [isEditable, setIsEditable] = useState(false);
-
-  function handleOpenEdit() {
-    setIsEditable(true);
-  }
 
   function handleLogOut() {
     setCurrentUser(null);
   }
 
-  
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsEditable(false);
-    }, []));
+  function handleEditProfile() {
+    navigation.navigate("EditProfile");
+  }
 
-
-    //TODO add labels above each input field
-
-    //Current field should only be opened after "edit details" is pressed
-    //regular profile screen presented without input form
   return (
-    <View>
-      <Text style={styles.header}> Hello {currentUser.firstname}</Text>
-      <ScrollView>
+    <SafeAreaView style={styles.screenContainer}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Hello {currentUser.firstname}</Text>
         <Text style={styles.headerSmall}>These are your details</Text>
-        <SafeAreaView>
-          <TextInput
-            style={styles.input}
-            onChangeText={setFirstName}
-            placeholder={currentUser.firstname}
-            editable={isEditable}
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={setLastName}
-            placeholder={currentUser.lastname}
-            editable={isEditable}
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={setEmail}
-            placeholder={currentUser.email}
-            editable={isEditable}
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={setUsername}
-            placeholder={currentUser.username}
-            editable={isEditable}
-          />
-          <TextInput
-          //TODO password as dots
-          //consider the eye icon that shows you your password
-            style={styles.input}
-            onChangeText={setPassword}
-            placeholder={currentUser.password}
-            secureTextEntry={true}
-            editable={isEditable}
-          />
+      </View>
+      <View>
+        <Text style={styles.fieldName}>First name: {currentUser.firstname}</Text>
 
-          <View style={{flexDirection: 'row', alignSelf: "center",}}>
-            <TouchableOpacity style={styles.button} onPress={handleOpenEdit}>
-              <View>
-                <Text style={styles.buttontext}>Edit details</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.button,{ backgroundColor: "#4ECB71"}]} onPress={handleLogOut}>
-              <View>
-                <Text style={styles.buttontext}>Log out</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </ScrollView>
-    </View>
+        <Text style={styles.fieldName}>Last name: {currentUser.lastname}</Text>
+
+        <Text style={styles.fieldName}>Email: {currentUser.email}</Text>
+
+        <Text style={styles.fieldName}>Username: {currentUser.username}</Text>
+
+        
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#4ECB71" }]}
+          onPress={handleLogOut}
+        >
+          <Text style={styles.buttonText}>Log out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
+          <Text style={styles.buttonText}>Edit Profile</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    margin: 8,
+  },
   header: {
-    fontWeight: "bold",
-    marginTop: 30,
-    marginBottom: 10,
-    marginLeft: 12,
+    fontWeight: "800",
+    color: "#070033",
     fontSize: 35,
     textAlign: "left",
   },
+  headerContainer: {
+    paddingBottom: 10,
+    borderBottomColor: "#476BE6",
+    borderBottomWidth: 1,
+    borderBottomStyle: "solid",
+  },
   headerSmall: {
-    marginLeft: 12,
+    color: "#070033",
     fontSize: 20,
     textAlign: "left",
   },
@@ -120,11 +85,21 @@ const styles = StyleSheet.create({
     color: "red",
   },
   input: {
+    marginHorizontal: 5,
     height: 40,
-    margin: 12,
     borderWidth: 1,
     padding: 10,
     borderRadius: 30,
+  },
+  fieldName: {
+    fontWeight: "500",
+    color: "#070033",
+    margin: 5,
+    marginTop: 15,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
   },
   button: {
     padding: 15,
@@ -135,7 +110,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 30,
   },
-  buttontext: {
+  buttonText: {
     color: "#FFF",
     textAlign: "center",
     fontSize: 18,

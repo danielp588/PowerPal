@@ -11,7 +11,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen() {
-  const navigaton = useNavigation();
+  const navigation = useNavigation();
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -22,6 +22,7 @@ export default function LoginScreen() {
   async function handleAuthenticateUser() {
     try {
       setLoginMsg("");
+      setLoginMsg("Logging in...");
       await authenticateUser(username, password);
       currentUser ? setLoginMsg("") : setLoginMsg("Try again");
     } catch (error) {
@@ -30,7 +31,7 @@ export default function LoginScreen() {
   }
 
   function handleSignUp() {
-    navigaton.navigate("SignUpScreen");
+    navigation.navigate("SignUpScreen");
   }
 
   return (
@@ -80,7 +81,6 @@ const styles = StyleSheet.create({
   msgText: {
     marginLeft: 12,
     fontSize: 16,
-    color: "red",
   },
   input: {
     height: 40,

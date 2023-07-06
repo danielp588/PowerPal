@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
-import { StyleSheet, View, Text, Modal } from "react-native";
+import { StyleSheet, View, Text, Modal, TouchableOpacity } from "react-native";
 import * as Location from "expo-location";
-import Station from "../components/Station";
-import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Map() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [stations, setStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false); //needs to be in context to use in station component
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const navigation = useNavigation();
 
   const RequestLocation = async () => {
     console.log("Requesting connection from user");
@@ -25,16 +26,16 @@ export default function Map() {
   };
 
   const LoadStations = async () => {
-    console.log("Loading stations from mongoDB");
     try {
+      console.log("Loading stations data");
       //fetching GAS STATIONS, not electric car stations - just for practice from external API
       let res = await fetch(
         "https://data.gov.il/api/3/action/datastore_search?resource_id=ef1d80ed-caa3-4ef8-a987-83ea2849ccaa&limit=20"
       );
       let data = await res.json();
+      console.log(data.result.records);
       setStations(data.result.records);
       console.log("Stations data loaded from API");
-      console.log(stations);
     } catch (error) {
       console.error(error);
     }
@@ -42,6 +43,7 @@ export default function Map() {
 
   const handleMarkerPress = (station) => {
     setSelectedStation(station);
+    setModalVisible(true);
   };
 
   useEffect(() => {
@@ -62,39 +64,40 @@ export default function Map() {
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
-            onPress={() => handleMarkerPress(station)} //works only after 2's press. TODO
           >
-            {selectedStation == station && (
-              <Callout>
-                <Text>{selectedStation.station_name}</Text>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    setModalVisible(true);
-                  }}
-                >
-                  <Text>Open details</Text>
+            <Callout onPress={() => handleMarkerPress(station)}>
+              <View>
+                <Text>{station.station_name}</Text>
+                <TouchableOpacity style={styles.calloutButton}>
+                  <View style={{ alignSelf: "center" }}>
+                    <Text>Press for details</Text>
+                  </View>
                 </TouchableOpacity>
-              </Callout>
-            )}
+              </View>
+            </Callout>
           </Marker>
         ))}
       </MapView>
-      <Modal 
-      visible={modalVisible}
-       animationType="slide"
-       style = {styles.container}
-       >
-        <Station {...selectedStation} />
-        <TouchableOpacity
-          style={[styles.button, styles.container]}
-          onPress={() => {
-            setModalVisible(false);
-          }}
-        >
-          <Text>Close</Text>
-        </TouchableOpacity>
-      </Modal>
+      {selectedStation ? (
+        <Modal visible={modalVisible} animationType="fade" transparent={true}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.stationName}>
+                {selectedStation.station_name}
+              </Text>
+              <Text>Address: {selectedStation.address}</Text>
+              <Text>Phone number: {selectedStation.telephone}</Text>
+              <Text>Adress: {selectedStation.address}</Text>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      ) : null}
     </View>
   );
 }
@@ -109,8 +112,38 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  button: {
-    padding: 5,
+  calloutButton: {
     backgroundColor: "#4ECB71",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  stationName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  closeButton: {
+    backgroundColor: "#476BE6",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  closeButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
