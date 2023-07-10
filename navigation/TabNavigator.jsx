@@ -49,7 +49,6 @@ const TabNavigator = () => {
               },
             }}
           />
-
           <Tab.Screen
             name="MyStations"
             component={MyStationsScreen}
@@ -67,6 +66,29 @@ const TabNavigator = () => {
                     size={28}
                   />
                 );
+              },
+            }}
+          />
+          <Tab.Screen
+            name="QuickSearch"
+            component={ProfileScreen}
+            options={{
+              tabBarLabel: "Quick Search",
+              tabBarIcon: ({ focused }) => {
+                let focusedColor;
+                focused
+                  ? (focusedColor = "#4ECB71")
+                  : (focusedColor = "#070033");
+                return (
+                  <Ionicons
+                    name="md-search-outline"
+                    color={focusedColor}
+                    size={28}
+                  />
+                );
+              },
+              tabBarStyle: {
+                backgroundColor: "#F00",
               },
             }}
           />

@@ -54,16 +54,19 @@ export default function Map() {
   return (
     <View>
       <MapView style={styles.map}>
-        {stations.map((station) => (
+        {
+        stations.map((station) => (
           <Marker
             key={station.station_number}
             title={station.station_name}
+            icon={require('../src/images/station.png')}
             coordinate={{
               latitude: station.Y,
               longitude: station.X,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
-            }}
+            }
+          }
           >
             <Callout onPress={() => handleMarkerPress(station)}>
               <View>
