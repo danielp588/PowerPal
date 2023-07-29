@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -18,6 +19,15 @@ export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [signUpMsg, setSignUpMsg] = useState("");
   const [signUpProcess, setSignUpProccess] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
 
   const { registerUser, currentUser, errorMsg } = useContext(UserContext);
 
@@ -120,60 +130,81 @@ export default function SignUpScreen({ navigation }) {
 
   return (
     <View>
+      <View style={styles.headerContainer}>
+        <View>
+          <Text style={styles.header}>Welcome!</Text>
+          <Text style={styles.headerSmall}>Please fill in the fields</Text>
+        </View>
+
+        <Ionicons
+          name="chevron-back-outline"
+          size={32}
+          style={{ marginRight: 8 }}
+        />
+      </View>
+
       <ScrollView>
-        <Text style={styles.header}>Welcome!</Text>
-        <Text style={styles.headerSmall}>Please fill in the fields</Text>
-        <SafeAreaView>
-          <TextInput
-            style={styles.input}
-            onChangeText={setUsername}
-            placeholder="Username"
-          />
+        <View style={styles.inputBox}>
+          <Text style={styles.fieldName}>Username</Text>
+          <TextInput style={styles.input} onChangeText={setUsername} />
+        </View>
+
+        <View style={styles.inputBox}>
+          <Text style={styles.fieldName}>Password</Text>
           <TextInput
             style={styles.input}
             onChangeText={setPassword}
-            placeholder="Password"
             secureTextEntry={true}
           />
-          <TextInput
-            style={styles.input}
-            onChangeText={setFirstName}
-            placeholder="First name"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={setLastName}
-            placeholder="Last name"
-          />
+        </View>
+        <View style={styles.inputBox}>
+          <Text style={styles.fieldName}>First name</Text>
+          <TextInput style={styles.input} onChangeText={setFirstName} />
+        </View>
+        <View style={styles.inputBox}>
+          <Text style={styles.fieldName}>Last name</Text>
+          <TextInput style={styles.input} onChangeText={setLastName} />
+        </View>
+        <View style={styles.inputBox}>
+          <Text style={styles.fieldName}>Email</Text>
           <TextInput
             style={styles.input}
             onChangeText={setEmail}
             keyboardType="email-address"
-            placeholder="email@mail.com"
           />
-          <Text style={{ marginLeft: 12 }}>{signUpMsg}</Text>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#4ECB71" }]}
-            onPress={handleRegister}
-          >
-            <View>
-              <Text style={styles.buttontext}>Sign Up</Text>
-            </View>
-          </TouchableOpacity>
-        </SafeAreaView>
+        </View>
       </ScrollView>
+      <Text style={{ marginLeft: 12 }}>{signUpMsg}</Text>
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: "#4ECB71" }]}
+        onPress={handleRegister}
+      >
+        <View>
+          <Text style={styles.buttontext}>Sign Up</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    fontWeight: "bold",
+    fontWeight: "800",
+    color: "#070033",
     marginTop: 30,
-    marginBottom: 10,
     marginLeft: 12,
     fontSize: 35,
     textAlign: "left",
+  },
+  headerContainer: {
+    paddingBottom: 10,
+    borderBottomColor: "#4ECB71",
+    borderBottomWidth: 2,
+    borderBottomStyle: "solid",
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
   },
   headerSmall: {
     marginLeft: 12,
@@ -186,12 +217,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "red",
   },
+  inputBox: {
+    margin: 10,
+  },
   input: {
     height: 40,
-    margin: 12,
     borderWidth: 1,
     padding: 10,
-    borderRadius: 30,
+    borderRadius: 10,
+  },
+  fieldName: {
+    fontWeight: "500",
+    color: "#070033",
   },
   button: {
     padding: 15,
@@ -199,12 +236,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: 200,
     alignSelf: "center",
-    margin: 10,
     borderRadius: 30,
   },
   buttontext: {
     color: "#FFF",
     textAlign: "center",
     fontSize: 22,
+  },
+  inputFocused: {
+    borderColor: "#476BE6",
+    borderWidth: 2,
   },
 });

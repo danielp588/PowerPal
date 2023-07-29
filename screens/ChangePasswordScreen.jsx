@@ -7,69 +7,48 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useContext, useState, useEffect} from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ChangePasswordScreen() {
-  const { setErrorMsg, errorMsg, changePassword } = useContext(UserContext);
+  const { changePassword } = useContext(UserContext);
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConf, setNewPasswordConf] = useState("");
 
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
-
   async function handleChangePassword() {
     try {
-      setErrorMsg("");
       newPassword === newPasswordConf
         ? await changePassword(oldPassword, newPassword)
-        : setErrorMsg("Password doesn't match the confirmation.");
-    } catch (error) {}
+        : alert("Password doesn't match the confirmation.");
+    } catch (error) {
+      console.error(error);
+    }
   }
-
-  useEffect(() => {
-    setErrorMsg("");
-  },[])
 
   return (
     <SafeAreaView style={styles.screenContainer}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Change password</Text>
+        {/*TODO this icon as a button and goes back a screen*/}
+        <Ionicons name="chevron-back-outline" size={32} />
+      </View>
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.headerContainer}>
-          {/*TODO add a back button so that people wont be confused*/}
-          <Text style={styles.headerSmall}>Change password</Text>
+        <View style={styles.inputBox}>
+          <Text style={styles.fieldName}>Old password</Text>
+          <TextInput style={styles.input} onChangeText={setOldPassword} />
         </View>
-        <View>
-          <Text style={styles.fieldName}>Insert your old password</Text>
-          <TextInput
-            style={[styles.input, isFocused && styles.inputFocused]}
-            onChangeText={setOldPassword}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            defaultValue="Old password"
-          />
-          <Text style={styles.fieldName}>Insert your new password</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setNewPassword}
-            defaultValue="New password"
-          />
+
+        <View style={styles.inputBox}>
+          <Text style={styles.fieldName}>New password</Text>
+          <TextInput style={styles.input} onChangeText={setNewPassword} />
+        </View>
+        <View style={styles.inputBox}>
           <Text style={styles.fieldName}>Confirm new password</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setNewPasswordConf}
-            defaultValue="Confirm new password"
-          />
+          <TextInput style={styles.input} onChangeText={setNewPasswordConf} />
         </View>
-        <Text>{errorMsg}</Text>
       </ScrollView>
 
       <View style={styles.buttonContainer}>
@@ -82,28 +61,23 @@ export default function ChangePasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  screenContainer: {
-    margin: 8,
-  },
-  scrollContainer: {
-    height: "87%",
-  },
   header: {
     fontWeight: "800",
     color: "#070033",
-    fontSize: 35,
+    marginLeft: 8,
+    fontSize: 30,
     textAlign: "left",
   },
   headerContainer: {
-    paddingBottom: 10,
+    marginTop: 14,
+    paddingBottom: 14,
+    marginBottom: 5,
     borderBottomColor: "#476BE6",
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomStyle: "solid",
-  },
-  headerSmall: {
-    color: "#070033",
-    fontSize: 28,
-    textAlign: "left",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   msgText: {
     marginLeft: 12,
@@ -116,17 +90,14 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     padding: 10,
-    borderRadius: 30,
+    borderRadius: 10,
   },
-  inputFocused: {
-    borderColor: "#4ECB71",
-    borderWidth: 2,
+  inputBox: {
+    margin: 10,
   },
   fieldName: {
     fontWeight: "500",
     color: "#070033",
-    margin: 5,
-    marginTop: 20,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -136,7 +107,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: "#476BE6",
     fontSize: 16,
-    maxWidth: "50%",
+    maxWidth: "5700%",
     alignSelf: "center",
     margin: 10,
     borderRadius: 30,

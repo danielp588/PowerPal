@@ -10,7 +10,6 @@ import ProfileScreen from "../screens/ProfileScreen";
 import LoginScreen from "../screens/LoginScreen";
 import MenuScreen from "../screens/MenuScreen";
 
-
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -26,8 +25,7 @@ const TabNavigator = () => {
       }}
       initialRouteName="Map"
     >
-      
-      { currentUser ? (
+      {currentUser ? (
         <>
           <Tab.Screen
             name="Profile"
@@ -70,10 +68,10 @@ const TabNavigator = () => {
             }}
           />
           <Tab.Screen
-            name="QuickSearch"
+            name="FastFind"
             component={ProfileScreen}
             options={{
-              tabBarLabel: "Quick Search",
+              tabBarLabel: "Fast Find",
               tabBarIcon: ({ focused }) => {
                 let focusedColor;
                 focused
@@ -86,9 +84,6 @@ const TabNavigator = () => {
                     size={28}
                   />
                 );
-              },
-              tabBarStyle: {
-                backgroundColor: "#F00",
               },
             }}
           />

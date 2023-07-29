@@ -10,35 +10,24 @@ import {
 import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
 
-  const { currentUser, errorMsg, updateUser, changePassword } =
+  const { currentUser, setCurrentUser, errorMsg, updateUser, changePassword } =
     useContext(UserContext);
 
   const [username, setUsername] = useState(currentUser.username);
   const [firstname, setFirstName] = useState(currentUser.firstname);
   const [lastname, setLastName] = useState(currentUser.lastname);
   const [email, setEmail] = useState(currentUser.email);
-  const [editMsg, setEditMsg] = useState("");
-
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
 
   async function handleEditDetails() {
     try {
       await updateUser(username, firstname, lastname, email);
-      setEditMsg("Details edited successfuly, log out to see the updates");
     } catch (error) {
-      setEditMsg(errorMsg);
+      alert(error);
       console.error(error);
     }
   }
@@ -53,32 +42,37 @@ export default function EditProfileScreen() {
 
   return (
     <SafeAreaView style={styles.screenContainer}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Edit details</Text>
+        {/*TODO this icon as a button and goes back a screen*/}
+        <Ionicons name="chevron-back-outline" size={32} />
+      </View>
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.headerContainer}>
-          {/*TODO add a back button so that people wont be confused*/}
-          <Text style={styles.headerSmall}>Edit details</Text>
-        </View>
-        <View>
+        <View style={styles.inputBox}>
           <Text style={styles.fieldName}>First name</Text>
           <TextInput
-            style={[styles.input, isFocused && styles.inputFocused]}
+            style={styles.input}
             onChangeText={setFirstName}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             defaultValue={currentUser.firstname}
           />
+        </View>
+        <View style={styles.inputBox}>
           <Text style={styles.fieldName}>Last name</Text>
           <TextInput
             style={styles.input}
             onChangeText={setLastName}
             defaultValue={currentUser.lastname}
           />
+        </View>
+        <View style={styles.inputBox}>
           <Text style={styles.fieldName}>Email</Text>
           <TextInput
             style={styles.input}
             onChangeText={setEmail}
             defaultValue={currentUser.email}
           />
+        </View>
+        <View style={styles.inputBox}>
           <Text style={styles.fieldName}>Username</Text>
           <TextInput
             style={styles.input}
@@ -86,14 +80,16 @@ export default function EditProfileScreen() {
             defaultValue={currentUser.username}
           />
         </View>
-        <Text>{editMsg}</Text>
       </ScrollView>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleEditDetails}>
           <Text style={styles.buttonText}>Edit details</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#476BE6" }]}
+          onPress={handleChangePassword}
+        >
           <Text style={styles.buttonText}>Change Password</Text>
         </TouchableOpacity>
       </View>
@@ -102,23 +98,22 @@ export default function EditProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  screenContainer: {
-    margin: 8,
-  },
-  scrollContainer: {
-    height: "87%",
-  },
   header: {
     fontWeight: "800",
     color: "#070033",
+    marginTop: 15,
+    marginLeft: 8,
     fontSize: 35,
     textAlign: "left",
   },
   headerContainer: {
     paddingBottom: 10,
-    borderBottomColor: "#476BE6",
-    borderBottomWidth: 1,
+    borderBottomColor: "#4ECB71",
+    borderBottomWidth: 2,
     borderBottomStyle: "solid",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline",
   },
   headerSmall: {
     color: "#070033",
@@ -136,29 +131,25 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     padding: 10,
-    borderRadius: 30,
+    borderRadius: 10,
   },
-  inputFocused: {
-    borderColor: "#4ECB71",
-    borderWidth: 2,
+  inputBox: {
+    margin: 10,
   },
   fieldName: {
     fontWeight: "500",
     color: "#070033",
-    margin: 5,
-    marginTop: 20,
   },
   buttonContainer: {
     flexDirection: "row",
-    alignSelf: "center",
   },
   button: {
     padding: 15,
-    backgroundColor: "#476BE6",
+    backgroundColor: "#4ECB71",
     fontSize: 16,
-    maxWidth: "50%",
+    maxWidth: "70%",
     alignSelf: "center",
-    margin: 10,
+    margin: 7,
     borderRadius: 30,
   },
   buttonText: {

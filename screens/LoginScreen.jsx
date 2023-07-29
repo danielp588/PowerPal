@@ -17,7 +17,8 @@ export default function LoginScreen() {
   const [password, setPassword] = useState();
   const [loginMsg, setLoginMsg] = useState("");
 
-  const { authenticateUser, currentUser } = useContext(UserContext);
+  const { authenticateUser, currentUser, loadMyStations } =
+    useContext(UserContext);
 
   async function handleAuthenticateUser() {
     try {
@@ -36,7 +37,11 @@ export default function LoginScreen() {
 
   return (
     <View>
-      <Text style={styles.header}>Login</Text>
+       <View style={styles.headerContainer}>
+       <Text style={styles.header}>Login</Text>
+        <Text style={styles.headerSmall}>Or sign up if you haven't yet!</Text>
+      </View>
+      
       <SafeAreaView>
         <TextInput
           style={styles.input}
@@ -50,9 +55,9 @@ export default function LoginScreen() {
           secureTextEntry={true}
         />
         <Text style={styles.msgText}>{loginMsg}</Text>
-        <View style={{marginHorizontal: 12}}>
+        <View style={{ marginHorizontal: 12 }}>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#4ECB71" }]}
+            style={[styles.button, { backgroundColor: "#476BE6" }]}
             onPress={handleAuthenticateUser}
           >
             <View>
@@ -72,11 +77,24 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: 35,
-    marginLeft: 12,
+    fontWeight: "800",
+    color: "#070033",
+    marginTop: 30,
+    marginLeft: 8,
     fontSize: 35,
     textAlign: "left",
-    fontWeight: "bold",
+  },
+  headerContainer: {
+    paddingBottom: 10,
+    borderBottomColor: "#476BE6",
+    borderBottomWidth: 2,
+    borderBottomStyle: "solid",
+  },
+  headerSmall: {
+    color: "#070033",
+    fontSize: 20,
+    marginLeft: 8,
+    textAlign: "left",
   },
   msgText: {
     marginLeft: 12,
@@ -87,11 +105,11 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    borderRadius: 30,
+    borderRadius: 10,
   },
   button: {
     padding: 15,
-    backgroundColor: "#476BE6",
+    backgroundColor: "#4ECB71",
     fontSize: 16,
     width: "100%",
     alignSelf: "center",
