@@ -2,9 +2,7 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   SafeAreaView,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import React, { useContext } from "react";
@@ -61,9 +59,8 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
       <View>
-        <Text style={{ fontSize: 30 }}>TODO'S</Text>
-        <Text>1. Edit profile - error handling with server side. input checks (no empty fields etc. take from register screen) </Text>
-        <Text>2. Fast Find commponent. </Text>
+        <Text style={{ fontSize: 20 }}>TODO'S</Text>
+
         <Text>3. Linking to navigation app on "go there" press </Text>
         <Text>4. Search bar in the top of map screen.</Text>
         <Text>5. Menu screen (the fuck to add even?)</Text>
@@ -114,16 +111,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   buttonContainer: {
-    flexDirection: "row",
-    alignSelf: "center",
+    marginHorizontal: 12,
   },
   button: {
     padding: 15,
     backgroundColor: "#4ECB71",
     fontSize: 16,
-    maxWidth: "50%",
+    width: "100%",
     alignSelf: "center",
-    margin: 10,
+    marginTop: 10,
     borderRadius: 30,
   },
   buttonText: {

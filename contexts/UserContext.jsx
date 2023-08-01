@@ -88,7 +88,7 @@ export default function UserContextProvider({ children }) {
         console.log(errorData);
         alert(errorData.error);
       } else {
-        alert("Details updated successfuly!")
+        alert("Updated successfuly! Log out to see the changes.")
         console.log("User updated successfully");
       }
     } catch (error) {

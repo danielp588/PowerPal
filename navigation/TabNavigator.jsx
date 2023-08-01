@@ -67,26 +67,6 @@ const TabNavigator = () => {
               },
             }}
           />
-          <Tab.Screen
-            name="FastFind"
-            component={ProfileScreen}
-            options={{
-              tabBarLabel: "Fast Find",
-              tabBarIcon: ({ focused }) => {
-                let focusedColor;
-                focused
-                  ? (focusedColor = "#4ECB71")
-                  : (focusedColor = "#070033");
-                return (
-                  <Ionicons
-                    name="md-search-outline"
-                    color={focusedColor}
-                    size={28}
-                  />
-                );
-              },
-            }}
-          />
         </>
       ) : (
         <Tab.Screen

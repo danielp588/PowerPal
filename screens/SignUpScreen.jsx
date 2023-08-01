@@ -115,6 +115,10 @@ export default function SignUpScreen({ navigation }) {
     }
   }
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   useEffect(() => {
     //using use effect in order to render the current user immediatly after a successful sign up
 
@@ -131,16 +135,13 @@ export default function SignUpScreen({ navigation }) {
   return (
     <View>
       <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={handleGoBack}>
+          <Ionicons name="chevron-back-outline" size={32} />
+        </TouchableOpacity>
         <View>
           <Text style={styles.header}>Welcome!</Text>
           <Text style={styles.headerSmall}>Please fill in the fields</Text>
         </View>
-
-        <Ionicons
-          name="chevron-back-outline"
-          size={32}
-          style={{ marginRight: 8 }}
-        />
       </View>
 
       <ScrollView>
@@ -175,15 +176,14 @@ export default function SignUpScreen({ navigation }) {
         </View>
       </ScrollView>
       <Text style={{ marginLeft: 12 }}>{signUpMsg}</Text>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#4ECB71" }]}
-        onPress={handleRegister}
-      >
-        <View>
+      <View style={{ marginHorizontal: 12 }}>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#4ECB71" }]}
+          onPress={handleRegister}
+        >
           <Text style={styles.buttontext}>Sign Up</Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     borderBottomStyle: "solid",
     flexDirection: "row",
     alignItems: "baseline",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   headerSmall: {
     marginLeft: 12,
@@ -232,9 +232,9 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 15,
+    width: "100%",
     backgroundColor: "#476BE6",
     fontSize: 16,
-    width: 200,
     alignSelf: "center",
     borderRadius: 30,
   },

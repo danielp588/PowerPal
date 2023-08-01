@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useContext, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ChangePasswordScreen() {
+  const navigation = useNavigation();
   const { changePassword } = useContext(UserContext);
 
   const [oldPassword, setOldPassword] = useState("");
@@ -27,13 +29,17 @@ export default function ChangePasswordScreen() {
       console.error(error);
     }
   }
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.screenContainer}>
       <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={handleGoBack}>
+          <Ionicons name="chevron-back-outline" size={32} />
+        </TouchableOpacity>
         <Text style={styles.header}>Change password</Text>
-        {/*TODO this icon as a button and goes back a screen*/}
-        <Ionicons name="chevron-back-outline" size={32} />
       </View>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.inputBox}>
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomStyle: "solid",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   msgText: {
@@ -102,12 +108,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     alignSelf: "center",
+    marginHorizontal:12
   },
   button: {
     padding: 15,
     backgroundColor: "#476BE6",
     fontSize: 16,
-    maxWidth: "5700%",
+    width:"100%",
     alignSelf: "center",
     margin: 10,
     borderRadius: 30,

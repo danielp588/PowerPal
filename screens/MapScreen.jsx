@@ -4,11 +4,14 @@ import { StyleSheet, View, Text, Modal, TouchableOpacity } from "react-native";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
+import { Ionicons } from "@expo/vector-icons";
+import { color } from "react-native-reanimated";
+const haversine = require("haversine");
 
 export default function Map() {
   const { saveStation, setErrorMsg, loadMyStations, myStations, currentUser } =
     useContext(UserContext);
-  const [location, setLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
   const [stations, setStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,8 +28,7 @@ export default function Map() {
     }
     console.log("Connection granted from user");
     let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-    //TODO Add marker in different color to show user's location
+    setUserLocation(location);
   };
 
   const LoadStations = async () => {
@@ -60,6 +62,39 @@ export default function Map() {
     setSaveStationActive(true);
   };
 
+  handleFastFindPress = async () => {
+    if (!userLocation) {
+      alert("Must grant access for location to use fast find.");
+      return;
+    }
+
+    const start = {
+      latitude: userLocation.coords.latitude,
+      longitude: userLocation.coords.longitude,
+    };
+
+    let end = {
+      latitude: stations[0].Y,
+      longitude: stations[0].X,
+    };
+
+    let shortestDistance = haversine(start, end);
+    let closestStationIndex = 0;
+
+    for (let i = 0; i < stations.length; i++) {
+      let newEnd = {
+        latitude: stations[i].Y,
+        longitude: stations[i].X,
+      };
+      if (haversine(start, newEnd) < shortestDistance) {
+        shortestDistance = haversine(start, newEnd);
+        closestStationIndex = i;
+      }
+    }
+
+    handleMarkerPress(stations[closestStationIndex]);
+  };
+
   useEffect(() => {
     if (saveStationActive) {
       console.log("station load activated");
@@ -69,7 +104,6 @@ export default function Map() {
   }, [saveStationActive]);
 
   useEffect(() => {
-    setErrorMsg("");
     RequestLocation();
     LoadStations();
   }, []);
@@ -77,6 +111,20 @@ export default function Map() {
   return (
     <View>
       <MapView style={styles.map}>
+        {/*User's location*/}
+        {userLocation && (
+          <Marker
+            coordinate={{
+              latitude: userLocation.coords.latitude,
+              longitude: userLocation.coords.longitude,
+            }}
+            pinColor="blue"
+          >
+            <Callout>
+              <Text>That's you</Text>
+            </Callout>
+          </Marker>
+        )}
         {stations.map((station) => (
           <Marker
             key={station.station_number}
@@ -147,6 +195,26 @@ export default function Map() {
           </View>
         </Modal>
       ) : null}
+      <View>
+        <TouchableOpacity
+          style={[styles.fastFindButton]}
+          onPress={() => {
+            handleFastFindPress();
+          }}
+          activeOpacity={0.4}
+        >
+          <View style={styles.fastFindTextBox}>
+            <Ionicons name="flash-outline" size={26} />
+            <Text style={{ fontSize: 10 }}>Fast find</Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.fastFindButtonShadow}>
+          <Ionicons name="flash-outline" size={26} color={"#07003300"} />
+          <Text style={[{ fontSize: 10 }, { color: "#07003300" }]}>
+            Fast find
+          </Text>
+        </View>
+      </View>
     </View>
   );
 }
@@ -198,5 +266,26 @@ const styles = StyleSheet.create({
   buttonsView: {
     flexDirection: "row",
     justifyContent: "space-evenly",
+  },
+  fastFindTextBox: {
+    alignItems: "center",
+  },
+  fastFindButton: {
+    position: "absolute",
+    zIndex: 10,
+    bottom: 10,
+    right: 10,
+    backgroundColor: "#4ECB71",
+    padding: 12,
+    borderRadius: 50,
+  },
+  fastFindButtonShadow: {
+    position: "absolute",
+    zIndex: 1,
+    bottom: 6,
+    right: 10,
+    backgroundColor: "#07003330",
+    padding: 12,
+    borderRadius: 50,
   },
 });

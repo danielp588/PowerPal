@@ -15,8 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 export default function EditProfileScreen() {
   const navigation = useNavigation();
 
-  const { currentUser, setCurrentUser, errorMsg, updateUser, changePassword } =
-    useContext(UserContext);
+  const { currentUser, updateUser } = useContext(UserContext);
 
   const [username, setUsername] = useState(currentUser.username);
   const [firstname, setFirstName] = useState(currentUser.firstname);
@@ -24,6 +23,68 @@ export default function EditProfileScreen() {
   const [email, setEmail] = useState(currentUser.email);
 
   async function handleEditDetails() {
+    console.log("username: " + username);
+    console.log("firstname: " + firstname);
+    console.log("lastname: " + lastname);
+    console.log("email: " + email);
+    // ========== [Username Validations] ==========
+    // Username Length 4 - 24 characters
+    if (username.length < 4 || username.length > 24)
+      return alert("Username must contain 4-24 characters!");
+    // Username A-z & 0-9 only
+    for (let i = 0; i < username.length; i++) {
+      if (
+        (username[i] < "A" || username[i] > "Z") &&
+        (username[i] < "a" || username[i] > "z") &&
+        (username[i] < "0" || username[i] > "9")
+      )
+        return alert(
+          "Username may only contain English characters and numbers!"
+        );
+    }
+
+    // ========== [Firstname Validations] ==========
+    // Firstname Length 2 - 24 characters
+    if (firstname.length < 2 || firstname.length > 24)
+      return alert("Firstname must contain 2-24 characters!");
+    // Firstname A-z only
+    for (let i = 0; i < firstname.length; i++) {
+      if (
+        (firstname[i] < "A" || firstname[i] > "Z") &&
+        (firstname[i] < "a" || firstname[i] > "z")
+      )
+        return alert("Firstname may only contain English characters!");
+    }
+
+    // ========== [Email Validations] ==========
+    if (email[0] == ".") return alert("Invalid email address!");
+    let at = false,
+      dot = false;
+    for (let i = 0; i < email.length; i++) {
+      // contains only A-z, 0-9, .-_
+      if (
+        (email[i] < "A" || email[i] > "Z") &&
+        (email[i] < "a" || email[i] > "z") &&
+        (email[i] < "0" || email[i] > "9") &&
+        email[i] != "." &&
+        email[i] != "-" &&
+        email[i] != "_" &&
+        email[i] != "@"
+      )
+        return alert("Invalid email address!");
+      if (email[i] == "@") {
+        if (at) return alert("Invalid email address!");
+        if (i < 2) return alert("Invalid email address!");
+        if (email[i - 1] == ".") return alert("Invalid email address!");
+        at = true;
+      }
+      if (at && email[i] == ".") {
+        if (i == email.length - 1) return alert("Invalid email address!");
+        dot = true;
+      }
+    }
+    if (!at || !dot) return alert("Invalid email address!");
+
     try {
       await updateUser(username, firstname, lastname, email);
     } catch (error) {
@@ -40,12 +101,18 @@ export default function EditProfileScreen() {
     }
   }
 
+  const handleGoBack = () => {
+    navigation.navigate("TabNavigator");
+  };
+
   return (
     <SafeAreaView style={styles.screenContainer}>
       <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={handleGoBack}>
+          <Ionicons name="chevron-back-outline" size={32} />
+        </TouchableOpacity>
         <Text style={styles.header}>Edit details</Text>
         {/*TODO this icon as a button and goes back a screen*/}
-        <Ionicons name="chevron-back-outline" size={32} />
       </View>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.inputBox}>
@@ -86,6 +153,7 @@ export default function EditProfileScreen() {
         <TouchableOpacity style={styles.button} onPress={handleEditDetails}>
           <Text style={styles.buttonText}>Edit details</Text>
         </TouchableOpacity>
+        <Text style={{ textAlign: "center" }}>or</Text>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: "#476BE6" }]}
           onPress={handleChangePassword}
@@ -112,7 +180,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomStyle: "solid",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "baseline",
   },
   headerSmall: {
@@ -141,13 +209,13 @@ const styles = StyleSheet.create({
     color: "#070033",
   },
   buttonContainer: {
-    flexDirection: "row",
+    marginHorizontal: 12,
   },
   button: {
     padding: 15,
     backgroundColor: "#4ECB71",
     fontSize: 16,
-    maxWidth: "70%",
+    width: "100%",
     alignSelf: "center",
     margin: 7,
     borderRadius: 30,
