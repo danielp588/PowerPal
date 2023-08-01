@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import { color } from "react-native-reanimated";
+import { Linking } from 'react-native';
 const haversine = require("haversine");
 
 export default function Map() {
@@ -91,8 +92,12 @@ export default function Map() {
         closestStationIndex = i;
       }
     }
-
     handleMarkerPress(stations[closestStationIndex]);
+  };
+
+  function openWaze(latitude, longitude){
+    const wazeUrl = `waze://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
+    Linking.openURL(wazeUrl);
   };
 
   useEffect(() => {

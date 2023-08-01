@@ -3,6 +3,7 @@
     "name": "PowerPal",
     "slug": "PowerPal",
     "version": "1.0.0",
+    "scheme": "powerpal",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
