@@ -92,7 +92,8 @@ export default function Map() {
         closestStationIndex = i;
       }
     }
-    handleMarkerPress(stations[closestStationIndex]);
+    //handleMarkerPress(stations[closestStationIndex]);
+    openWaze(stations[closestStationIndex].longitude, stations[closestStationIndex].latitude);
   };
 
   function openWaze(latitude, longitude){
