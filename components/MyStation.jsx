@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { UserContext } from "../contexts/UserContext";
 import { Ionicons } from "@expo/vector-icons";
+import { Linking } from "react-native";
 
 export default function MyStation({ station }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,10 @@ export default function MyStation({ station }) {
   const handleDeleteStation = async () => {
     await deleteStation(station.station_ID);
     setDeleteStationActive(true);
+  };
+  const openWaze = (latitude, longitude) => {
+    const wazeUrl = `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
+    Linking.openURL(wazeUrl);
   };
 
   useEffect(() => {
@@ -34,15 +39,23 @@ export default function MyStation({ station }) {
       <View style={styles.stationHeader}>
         <Text style={styles.stationName}>{station.station_name}</Text>
         {isOpen ? (
-          <Ionicons name="chevron-up-outline" size={28} style={{color:"#070033"}} />
+          <Ionicons
+            name="chevron-up-outline"
+            size={28}
+            style={{ color: "#070033" }}
+          />
         ) : (
-          <Ionicons name="chevron-down-outline" size={28} style={{color:"#070033"}}/>
+          <Ionicons
+            name="chevron-down-outline"
+            size={28}
+            style={{ color: "#070033" }}
+          />
         )}
       </View>
       {isOpen && (
         <View>
-          <Text style={{color:"#070033"}}>X: {station.X}</Text>
-          <Text style={{color:"#070033"}}>Y: {station.Y}</Text>
+          <Text style={{ color: "#070033" }}>X: {station.X}</Text>
+          <Text style={{ color: "#070033" }}>Y: {station.Y}</Text>
         </View>
       )}
       {isOpen && (
@@ -60,8 +73,8 @@ export default function MyStation({ station }) {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "#4ECB71" }]}
             onPress={() => {
-              //TODO link to navigation app
-              alert("Go there pressed");
+              console.log(station)
+              openWaze(station.Y, station.X);
             }}
           >
             <View>
@@ -78,20 +91,20 @@ const styles = StyleSheet.create({
   stationContainer: {
     borderWidth: 1,
     borderColor: "#070033",
-    padding:10,
+    padding: 10,
     margin: 5,
     borderRadius: 5,
-    backgroundColor:"white"
+    backgroundColor: "white",
   },
   stationHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems:"center"
+    alignItems: "center",
   },
   stationName: {
     fontWeight: "bold",
     fontSize: 16,
-    color:"#070033"
+    color: "#070033",
   },
   button: {
     padding: 15,

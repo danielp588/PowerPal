@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import { color } from "react-native-reanimated";
-import { Linking } from 'react-native';
+import { Linking } from "react-native";
 const haversine = require("haversine");
 
 export default function Map() {
@@ -92,12 +92,12 @@ export default function Map() {
         closestStationIndex = i;
       }
     }
-    //handleMarkerPress(stations[closestStationIndex]);
-    openWaze(stations[closestStationIndex].longitude, stations[closestStationIndex].latitude);
+
+    handleMarkerPress(stations[closestStationIndex]);
   };
 
-  function openWaze(latitude, longitude){
-    const wazeUrl = `waze://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
+  const openWaze = (latitude, longitude) => {
+    const wazeUrl = `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
     Linking.openURL(wazeUrl);
   };
 
@@ -180,8 +180,7 @@ export default function Map() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.button, { backgroundColor: "#4ECB71" }]}
-                  onPress={() => alert("Go there pressed")}
-                  //TODO link to navigation app
+                  onPress={() => openWaze(selectedStation.Y, selectedStation.X)}
                 >
                   <View>
                     <Text style={styles.buttonText}>Go There</Text>
