@@ -36,39 +36,44 @@ export default function LoginScreen() {
   }
 
   return (
-    <View>
-       <View style={styles.headerContainer}>
-       <Text style={styles.header}>Login</Text>
-        <Text style={styles.headerSmall}>Or sign up if you haven't yet!</Text>
-      </View>
-      
+    <View style={{ backgroundColor: "#4ECB71" }}>
       <SafeAreaView>
-        <TextInput
-          style={styles.input}
-          onChangeText={setUsername}
-          placeholder="Username"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setPassword}
-          placeholder="Password"
-          secureTextEntry={true}
-        />
-        <Text style={styles.msgText}>{loginMsg}</Text>
-        <View style={{ marginHorizontal: 12 }}>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#476BE6" }]}
-            onPress={handleAuthenticateUser}
-          >
-            <View>
-              <Text style={styles.buttontext}>Login</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-            <View>
-              <Text style={styles.buttontext}>Sign up</Text>
-            </View>
-          </TouchableOpacity>
+        <View style={[{ backgroundColor: "#f0f8ff"}, {height:"100%"}]}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.header}>Login</Text>
+            <Text style={styles.headerSmall}>
+              Or sign up if you haven't yet!
+            </Text>
+          </View>
+
+          <View style={styles.inputBox}>
+            <Text style={styles.fieldName}>Username</Text>
+            <TextInput style={styles.input} onChangeText={setUsername} />
+          </View>
+          <View style={styles.inputBox}>
+            <Text style={styles.fieldName}>Password</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setPassword}
+              secureTextEntry={true}
+            />
+          </View>
+          <Text style={styles.msgText}>{loginMsg}</Text>
+          <View style={{ marginHorizontal: 12 }}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "#476BE6" }]}
+              onPress={handleAuthenticateUser}
+            >
+              <View>
+                <Text style={styles.buttontext}>Login</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+              <View>
+                <Text style={styles.buttontext}>Sign up</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </SafeAreaView>
     </View>
@@ -79,12 +84,12 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: "800",
     color: "#070033",
-    marginTop: 30,
     marginLeft: 8,
     fontSize: 35,
     textAlign: "left",
   },
   headerContainer: {
+    paddingTop:10,
     paddingBottom: 10,
     borderBottomColor: "#476BE6",
     borderBottomWidth: 2,
@@ -101,11 +106,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   input: {
+    marginHorizontal: 5,
     height: 40,
-    margin: 12,
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
+  },
+  inputBox: {
+    margin: 10,
+  },
+  fieldName: {
+    fontWeight: "500",
+    color: "#070033",
   },
   button: {
     padding: 15,

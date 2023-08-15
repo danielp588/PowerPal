@@ -21,32 +21,27 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: { color: "#070033", paddingBottom: 5 },
-        tabBarStyle: { height: 55 },
       }}
       initialRouteName="Map"
     >
+      <Tab.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          tabBarStyle: { zIndex: 10 },
+          tabBarLabel: "Map",
+          tabBarIcon: ({ focused }) => {
+            let focusedColor;
+            focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
+            return (
+              <Ionicons name="map-outline" color={focusedColor} size={28} />
+            );
+          },
+        }}
+      />
+
       {currentUser ? (
         <>
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              tabBarLabel: "Profile",
-              tabBarIcon: ({ focused }) => {
-                let focusedColor;
-                focused
-                  ? (focusedColor = "#4ECB71")
-                  : (focusedColor = "#070033");
-                return (
-                  <Ionicons
-                    name="person-outline"
-                    color={focusedColor}
-                    size={28}
-                  />
-                );
-              },
-            }}
-          />
           <Tab.Screen
             name="MyStations"
             component={MyStationsScreen}
@@ -88,35 +83,6 @@ const TabNavigator = () => {
           }}
         />
       )}
-
-      <Tab.Screen
-        name="Map"
-        component={MapScreen}
-        options={{
-          tabBarLabel: "Map",
-          tabBarIcon: ({ focused }) => {
-            let focusedColor;
-            focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
-            return (
-              <Ionicons name="map-outline" color={focusedColor} size={28} />
-            );
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Menu"
-        component={MenuScreen}
-        options={{
-          tabBarLabel: "Menu",
-          tabBarIcon: ({ focused }) => {
-            let focusedColor;
-            focused ? (focusedColor = "#4ECB71") : (focusedColor = "#070033");
-            return (
-              <Ionicons name="menu-outline" color={focusedColor} size={32} />
-            );
-          },
-        }}
-      />
     </Tab.Navigator>
   );
 };

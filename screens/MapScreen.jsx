@@ -1,13 +1,22 @@
+import "react-native-gesture-handler";
 import React, { useState, useEffect, useContext } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+  SafeAreaView,
+} from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
-import { StyleSheet, View, Text, Modal, TouchableOpacity } from "react-native";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import { color } from "react-native-reanimated";
 import { Linking } from "react-native";
-const haversine = require("haversine");
+const haversine = require("haversine"); //todo drive time algorithm
 
 export default function Map() {
   const { saveStation, setErrorMsg, loadMyStations, myStations, currentUser } =
@@ -35,17 +44,19 @@ export default function Map() {
   const LoadStations = async () => {
     try {
       console.log("Loading stations data");
-      //fetching GAS STATIONS, not electric car stations - havent recieved e-station API
       let res = await fetch(
-        "https://data.gov.il/api/3/action/datastore_search?resource_id=ef1d80ed-caa3-4ef8-a987-83ea2849ccaa&limit=20"
+        `https://powerpal-ij11.onrender.com/api/stations/limit=20`
       );
       let data = await res.json();
-      console.log(data.result.records);
-      setStations(data.result.records);
+      setStations(data);
       console.log("Stations data loaded from API");
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleOpenMenu = () => {
+    navigation.navigate("Menu");
   };
 
   const handleMarkerPress = (station) => {
@@ -54,12 +65,7 @@ export default function Map() {
   };
 
   const handleSaveStation = async (station) => {
-    let station_ID = station._id;
-    let station_name = station.station_name;
-    let X = station.X;
-    let Y = station.Y;
-
-    await saveStation(station_ID, station_name, X, Y);
+    await saveStation(station);
     setSaveStationActive(true);
   };
 
@@ -115,120 +121,163 @@ export default function Map() {
   }, []);
 
   return (
-    <View>
-      <MapView style={styles.map}>
-        {/*User's location*/}
-        {userLocation && (
-          <Marker
-            coordinate={{
-              latitude: userLocation.coords.latitude,
-              longitude: userLocation.coords.longitude,
-            }}
-            pinColor="blue"
-          >
-            <Callout>
-              <Text>That's you</Text>
-            </Callout>
-          </Marker>
-        )}
-        {stations.map((station) => (
-          <Marker
-            key={station.station_number}
-            title={station.station_name}
-            icon={require("../src/images/station.png")}
-            coordinate={{
-              latitude: station.Y,
-              longitude: station.X,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Callout onPress={() => handleMarkerPress(station)}>
-              <View>
-                <Text>{station.station_name}</Text>
-                <TouchableOpacity style={styles.calloutButton}>
-                  <View style={{ alignSelf: "center" }}>
-                    <Text>Press for details</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </Callout>
-          </Marker>
-        ))}
-      </MapView>
-      {selectedStation ? (
-        <Modal visible={modalVisible} animationType="fade" transparent={true}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.stationName}>
-                {selectedStation.station_name}
-              </Text>
-              <Text>Address: {selectedStation.address}</Text>
-              <Text>Phone number: {selectedStation.telephone}</Text>
-              <View style={styles.buttonsView}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    currentUser
-                      ? handleSaveStation(selectedStation)
-                      : alert("You must be logged in to save stations.");
-                  }}
-                >
-                  <View>
-                    <Text style={styles.buttonText}>Save</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: "#4ECB71" }]}
-                  onPress={() => openWaze(selectedStation.Y, selectedStation.X)}
-                >
-                  <View>
-                    <Text style={styles.buttonText}>Go There</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: "#CA6060" }]}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <View>
-                    <Text style={styles.buttonText}>Close</Text>
-                  </View>
-                </TouchableOpacity>
+    //view below sets the color for the phone bar that shows the time, battery etc.
+    <View style={{ backgroundColor: "#4ECB71" }}>
+      <SafeAreaView>
+        <MapView style={styles.map}>
+          <View style={styles.topActionBox}>
+            <View style={styles.searchBox}>
+              <Ionicons name="search-outline" size={24} />
+              <View style={styles.inputBox}>
+                <TextInput style={{top: 22, left:42}} placeholder="Search for a station" />
               </View>
             </View>
+
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => {
+                handleOpenMenu();
+              }}
+            >
+              <Ionicons name="menu-outline" size={28} />
+            </TouchableOpacity>
           </View>
-        </Modal>
-      ) : null}
-      <View>
-        <TouchableOpacity
-          style={[styles.fastFindButton]}
-          onPress={() => {
-            handleFastFindPress();
-          }}
-          activeOpacity={0.4}
-        >
-          <View style={styles.fastFindTextBox}>
-            <Ionicons name="flash-outline" size={26} />
-            <Text style={{ fontSize: 10 }}>Fast find</Text>
+
+          {/*User's location*/}
+          {userLocation && (
+            <Marker
+              coordinate={{
+                latitude: userLocation.coords.latitude,
+                longitude: userLocation.coords.longitude,
+              }}
+              pinColor="blue"
+            >
+              <Callout>
+                <Text>That's you</Text>
+              </Callout>
+            </Marker>
+          )}
+          {stations.map((station) => (
+            <Marker
+              key={station._id}
+              title={station.name}
+              icon={require("../src/images/station.png")}
+              coordinate={{
+                latitude: station.lat,
+                longitude: station.long,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+              <Callout onPress={() => handleMarkerPress(station)}>
+                <View>
+                  <Text>{station.name}</Text>
+                  <TouchableOpacity style={styles.calloutButton}>
+                    <View style={{ alignSelf: "center" }}>
+                      <Text>Press for details</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </Callout>
+            </Marker>
+          ))}
+        </MapView>
+        {selectedStation ? (
+          <Modal visible={modalVisible} animationType="fade" transparent={true}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.stationName}>{selectedStation.name}</Text>
+                <Text>City: {selectedStation.city}</Text>
+                <Text>Address: {selectedStation.address}</Text>
+                <Text>Connector type: {selectedStation.connector}</Text>
+                <Text>Power supply: {selectedStation.power_supply} kW</Text>
+                <View style={styles.buttonsView}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      currentUser
+                        ? handleSaveStation(selectedStation)
+                        : alert("You must be logged in to save stations.");
+                    }}
+                  >
+                    <View>
+                      <Text style={styles.buttonText}>Save</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, { backgroundColor: "#4ECB71" }]}
+                    onPress={() =>
+                      openWaze(selectedStation.lat, selectedStation.long)
+                    }
+                  >
+                    <View>
+                      <Text style={styles.buttonText}>Go There</Text>
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[styles.button, { backgroundColor: "#CA6060" }]}
+                    onPress={() => setModalVisible(false)}
+                  >
+                    <View>
+                      <Text style={styles.buttonText}>Close</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        ) : null}
+        <View>
+          <TouchableOpacity
+            style={[styles.fastFindButton]}
+            onPress={() => {
+              handleFastFindPress();
+            }}
+            activeOpacity={0.4}
+          >
+            <View style={styles.fastFindTextBox}>
+              <Ionicons color={"white"} name="flash-outline" size={26} />
+              <Text style={{ fontSize: 10, color:"white" }}>Fast find</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.fastFindButtonShadow}>
+            <Ionicons name="flash-outline" size={26} color={"#07003300"} />
+            <Text style={[{ fontSize: 10 }, { color: "#07003300" }]}>
+              Fast find
+            </Text>
           </View>
-        </TouchableOpacity>
-        <View style={styles.fastFindButtonShadow}>
-          <Ionicons name="flash-outline" size={26} color={"#07003300"} />
-          <Text style={[{ fontSize: 10 }, { color: "#07003300" }]}>
-            Fast find
-          </Text>
         </View>
-      </View>
+      </SafeAreaView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
+  topActionBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 8,
+  },
+  searchBox: {
+    flexDirection: "row",
+    alignContent: "center",
     alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+    width: "70%",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+  },
+  inputBox: {
+    maxWidth: "85%",
+  },
+  menuButton: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 30,
+    paddingLeft: 10,
+    paddingRight: 9,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
   map: {
     width: "100%",
@@ -253,6 +302,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stationName: {
+    textAlign: "right",
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
@@ -278,18 +328,18 @@ const styles = StyleSheet.create({
   fastFindButton: {
     position: "absolute",
     zIndex: 10,
-    bottom: 10,
-    right: 10,
-    backgroundColor: "#4ECB71",
+    bottom: 4,
+    alignSelf: "center",
+    backgroundColor: "#476BE6",
     padding: 12,
     borderRadius: 50,
   },
   fastFindButtonShadow: {
     position: "absolute",
     zIndex: 1,
-    bottom: 6,
-    right: 10,
-    backgroundColor: "#07003330",
+    bottom: 0,
+    alignSelf: "center",
+    backgroundColor: "#476BE670",
     padding: 12,
     borderRadius: 50,
   },

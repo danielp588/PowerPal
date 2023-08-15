@@ -30,7 +30,7 @@ export default function MyStationsScreen() {
           </Text>
         ) : (
           myStations.map((station) => (
-            <MyStation key={station.station_ID} station={station} />
+            <MyStation key={station._id} station={station} />
           ))
         )}
       </ScrollView>

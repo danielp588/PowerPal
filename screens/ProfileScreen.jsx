@@ -8,64 +8,75 @@ import {
 import React, { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
 
   const { currentUser, setCurrentUser } = useContext(UserContext);
 
-  function handleLogOut() {
+  const handleLogOut = () => {
     setCurrentUser(null);
-  }
+  };
 
-  function handleEditProfile() {
+  const handleEditProfile = () => {
     navigation.navigate("EditProfile");
-  }
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   return (
-    <SafeAreaView style={styles.screenContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Hello {currentUser.firstname}</Text>
-        <Text style={styles.headerSmall}>These are your details</Text>
-      </View>
-      <View style={styles.detailsBox}>
-        <View style={styles.fieldBox}>
-          <Text style={styles.fieldName}>First name:</Text>
-          <Text>{currentUser.firstname}</Text>
+    <View style={{ backgroundColor: "#4ECB71" }}>
+      <SafeAreaView>
+        <View style={[{ backgroundColor: "white" }, { height: "100%" }]}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+              <Ionicons name="chevron-back-outline" size={32} />
+            </TouchableOpacity>
+            <View>
+              <Text style={styles.header}>Hello {currentUser.firstname}</Text>
+              <Text style={styles.headerSmall}>These are your details</Text>
+            </View>
+          </View>
+          <View style={styles.spaceBox}>
+            <View>
+              <View style={styles.fieldBox}>
+                <Text style={styles.fieldName}>First name:</Text>
+                <Text>{currentUser.firstname}</Text>
+              </View>
+              <View style={styles.fieldBox}>
+                <Text style={styles.fieldName}>Last name:</Text>
+                <Text>{currentUser.lastname}</Text>
+              </View>
+              <View style={styles.fieldBox}>
+                <Text style={styles.fieldName}>Email:</Text>
+                <Text>{currentUser.email}</Text>
+              </View>
+              <View style={styles.fieldBox}>
+                <Text style={styles.fieldName}>Username:</Text>
+                <Text>{currentUser.username}</Text>
+              </View>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleEditProfile}
+              >
+                <Text style={styles.buttonText}>Edit Profile</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: "#476BE6" }]}
+                onPress={handleLogOut}
+              >
+                <Text style={styles.buttonText}>Log out</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <View style={styles.fieldBox}>
-          <Text style={styles.fieldName}>Last name:</Text>
-          <Text>{currentUser.lastname}</Text>
-        </View>
-        <View style={styles.fieldBox}>
-          <Text style={styles.fieldName}>Email:</Text>
-          <Text>{currentUser.email}</Text>
-        </View>
-        <View style={styles.fieldBox}>
-          <Text style={styles.fieldName}>Username:</Text>
-          <Text>{currentUser.username}</Text>
-        </View>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: "#476BE6" }]}
-          onPress={handleLogOut}
-        >
-          <Text style={styles.buttonText}>Log out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
-          <Text style={styles.buttonText}>Edit Profile</Text>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <Text style={{ fontSize: 20 }}>TODO'S</Text>
-
-        <Text>3. Linking to navigation app on "go there" press </Text>
-        <Text>4. Search bar in the top of map screen.</Text>
-        <Text>5. Menu screen (the fuck to add even?)</Text>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 }
 
@@ -79,6 +90,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   headerContainer: {
+    flexDirection:"row",
+    alignItems:"center",
     paddingBottom: 10,
     borderBottomColor: "#476BE6",
     borderBottomWidth: 2,
@@ -96,8 +109,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "red",
   },
-  detailsBox: {
-    backgroundColor: "rgba(128, 128, 128, 0.05)",
+  spaceBox: {
+    flexDirection: "column",
+    //to add space?
   },
   fieldBox: {
     marginLeft: 8,

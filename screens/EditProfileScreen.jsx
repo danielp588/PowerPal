@@ -102,7 +102,7 @@ export default function EditProfileScreen() {
   }
 
   const handleGoBack = () => {
-    navigation.navigate("TabNavigator");
+    navigation.goBack();
   };
 
   return (

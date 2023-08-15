@@ -38,6 +38,7 @@ export default function UserContextProvider({ children }) {
     }
   }
 
+  //password exposed when sending to server side - bonus todo
   async function registerUser(username, password, firstname, lastname, email) {
     try {
       console.log("Attempting to sign up...");
@@ -88,7 +89,7 @@ export default function UserContextProvider({ children }) {
         console.log(errorData);
         alert(errorData.error);
       } else {
-        alert("Updated successfuly! Log out to see the changes.")
+        alert("Updated successfuly! Log out to see the changes.");
         console.log("User updated successfully");
       }
     } catch (error) {
@@ -127,7 +128,7 @@ export default function UserContextProvider({ children }) {
   }
 
   //user's my station functions
-  async function saveStation(station_ID, station_name, X, Y) {
+  async function saveStation(station) {
     try {
       if (!currentUser) {
         alert("You must be logged in to save stations.");
@@ -135,13 +136,7 @@ export default function UserContextProvider({ children }) {
       }
 
       console.log("Saving station to user's myStations...");
-      const data = {
-        station_ID,
-        station_name,
-        X,
-        Y,
-      };
-
+      console.log(station);
       let res = await fetch(
         `https://powerpal-ij11.onrender.com/api/users/addStation/${currentUser._id}`,
         {
@@ -150,7 +145,7 @@ export default function UserContextProvider({ children }) {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(station),
         }
       );
 
@@ -211,7 +206,6 @@ export default function UserContextProvider({ children }) {
 
   async function loadMyStations() {
     try {
-      console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
       console.log("Loading user's stations data");
       let res = await fetch(
         `https://powerpal-ij11.onrender.com/api/users/getStations/${currentUser._id}`,
@@ -227,7 +221,6 @@ export default function UserContextProvider({ children }) {
       let data = await res.json();
       setMyStations(data);
       console.log("User's my stations loaded successfully");
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     } catch (error) {
       console.error(error);
     }
