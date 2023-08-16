@@ -68,7 +68,7 @@ export default function MyStation({ station }) {
             Connector type: {station.connector}
           </Text>
           <Text style={{ color: "#070033" }}>
-            Power supply: {station.power_supply}
+            Power supply: {station.power_supply} kW
           </Text>
         </View>
       )}
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   stationHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   stationName: {
@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#070033",
     maxWidth: "90%",
+    marginRight: 5
   },
   button: {
     padding:12,

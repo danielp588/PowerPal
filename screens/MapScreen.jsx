@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   SafeAreaView,
+  FlatList,
 } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -16,16 +17,22 @@ import { UserContext } from "../contexts/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import { color } from "react-native-reanimated";
 import { Linking } from "react-native";
+import filter from "lodash.filter";
+import { ScreenContainer } from "react-native-screens";
+import { Dimensions } from "react-native";
+
 const haversine = require("haversine"); //todo drive time algorithm
 
 export default function Map() {
-  const { saveStation, setErrorMsg, loadMyStations, myStations, currentUser } =
-    useContext(UserContext);
+  const { saveStation, loadMyStations, currentUser } = useContext(UserContext);
   const [userLocation, setUserLocation] = useState(null);
   const [stations, setStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [saveStationActive, setSaveStationActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isFoundSearch, setIsFoundSearch] = useState(false);
 
   const navigation = useNavigation();
 
@@ -45,7 +52,7 @@ export default function Map() {
     try {
       console.log("Loading stations data");
       let res = await fetch(
-        `https://powerpal-ij11.onrender.com/api/stations/limit=20`
+        `https://powerpal-ij11.onrender.com/api/stations/limit=30`
       );
       let data = await res.json();
       setStations(data);
@@ -81,8 +88,8 @@ export default function Map() {
     };
 
     let end = {
-      latitude: stations[0].Y,
-      longitude: stations[0].X,
+      latitude: stations[0].lat,
+      longitude: stations[0].long,
     };
 
     let shortestDistance = haversine(start, end);
@@ -90,8 +97,8 @@ export default function Map() {
 
     for (let i = 0; i < stations.length; i++) {
       let newEnd = {
-        latitude: stations[i].Y,
-        longitude: stations[i].X,
+        latitude: stations[i].lat,
+        longitude: stations[i].long,
       };
       if (haversine(start, newEnd) < shortestDistance) {
         shortestDistance = haversine(start, newEnd);
@@ -105,6 +112,37 @@ export default function Map() {
   const openWaze = (latitude, longitude) => {
     const wazeUrl = `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
     Linking.openURL(wazeUrl);
+  };
+
+  const handleSearch = (query) => {
+    setIsSearching(true);
+    if (query == "") {
+      setSearchQuery([]);
+      setIsSearching(false);
+      setIsFoundSearch(false);
+      return;
+    }
+
+    //TODO look for city names as well, connector types, power, etc..
+    const filteredData = filter(stations, (item) => {
+      return contains(item, query);
+    });
+    if (filteredData.length > 0) {
+      setIsFoundSearch(true);
+    }
+    else{
+      setIsFoundSearch(false);
+    }
+    console.log(filteredData.length)
+    console.log(isFoundSearch);
+    setSearchQuery(filteredData);
+  };
+
+  const contains = ({ name }, query) => {
+    if (name.includes(query)) {
+      return true;
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -125,22 +163,55 @@ export default function Map() {
     <View style={{ backgroundColor: "#4ECB71" }}>
       <SafeAreaView>
         <MapView style={styles.map}>
-          <View style={styles.topActionBox}>
-            <View style={styles.searchBox}>
-              <Ionicons name="search-outline" size={24} />
-              <View style={styles.inputBox}>
-                <TextInput style={{top: 22, left:42}} placeholder="Search for a station" />
+          <View>
+            <View style={styles.topActionBox}>
+              <View style={styles.searchBox}>
+                <Ionicons name="search-outline" size={24} />
+                <View style={styles.inputBox}>
+                  <TextInput
+                    style={{ top: 22, left: 42 }}
+                    placeholder="Search for a station"
+                    onChangeText={(query) => {
+                      handleSearch(query);
+                    }}
+                  />
+                </View>
               </View>
-            </View>
 
-            <TouchableOpacity
-              style={styles.menuButton}
-              onPress={() => {
-                handleOpenMenu();
-              }}
-            >
-              <Ionicons name="menu-outline" size={28} />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.menuButton}
+                onPress={() => {
+                  handleOpenMenu();
+                }}
+              >
+                <Ionicons name="menu-outline" size={28} />
+              </TouchableOpacity>
+            </View>
+            <View>
+              {isSearching ? (
+                <View style={styles.searchedStations}>
+                  {isFoundSearch ? (
+                    <FlatList
+                      data={searchQuery}
+                      keyExtractor={(item) => item._id}
+                      renderItem={({ item }) => (
+                        <View style={styles.listItem}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              handleMarkerPress(item);
+                            }}
+                          >
+                            <Text style={styles.listItemText}>{item.name}</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                    />
+                  ) : (
+                    <Text>Search for something else...</Text>
+                  )}
+                </View>
+              ) : null}
+            </View>
           </View>
 
           {/*User's location*/}
@@ -238,7 +309,7 @@ export default function Map() {
           >
             <View style={styles.fastFindTextBox}>
               <Ionicons color={"white"} name="flash-outline" size={26} />
-              <Text style={{ fontSize: 10, color:"white" }}>Fast find</Text>
+              <Text style={{ fontSize: 10, color: "white" }}>Fast find</Text>
             </View>
           </TouchableOpacity>
           <View style={styles.fastFindButtonShadow}>
@@ -269,7 +340,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.9)",
   },
   inputBox: {
-    maxWidth: "85%",
+    width: "85%",
   },
   menuButton: {
     backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -278,6 +349,18 @@ const styles = StyleSheet.create({
     paddingRight: 9,
     paddingTop: 8,
     paddingBottom: 8,
+  },
+  searchedStations: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    padding: 10,
+    borderRadius: 10,
+    maxHeight: Dimensions.get('window').height / 2
+  },
+  listItem: {
+    padding: 8,
+  },
+  listItemText: {
+    textAlign: "right",
   },
   map: {
     width: "100%",
