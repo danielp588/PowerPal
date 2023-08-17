@@ -25,6 +25,10 @@ export default function MenuScreen({ navigation }) {
     navigation.navigate("TabNavigator");
   };
 
+  const handleLogin = () => {
+    navigation.navigate("Login");
+  };
+
   return (
     //view below sets the color for the phone bar that shows the time, battery etc.
     <View style={{ backgroundColor: "#4ECB71" }}>
@@ -49,7 +53,17 @@ export default function MenuScreen({ navigation }) {
                   <Text style={styles.menuText}>Profile</Text>
                 </View>
               </TouchableOpacity>
-            ) : null}
+            ) : (
+              <TouchableOpacity
+                style={{ paddingTop: 25 }}
+                onPress={() => handleLogin()}
+              >
+                <View style={styles.menuItem}>
+                  <Ionicons name="log-in-outline" size={24} />
+                  <Text style={styles.menuText}>Login</Text>
+                </View>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity style={{ paddingTop: 25 }}>
               <View style={styles.menuItem}>
                 <Ionicons name="settings-outline" size={24} />

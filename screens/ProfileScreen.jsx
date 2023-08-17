@@ -15,10 +15,6 @@ export default function ProfileScreen() {
 
   const { currentUser, setCurrentUser } = useContext(UserContext);
 
-  const handleLogOut = () => {
-    setCurrentUser(null);
-  };
-
   const handleEditProfile = () => {
     navigation.navigate("EditProfile");
   };
@@ -65,12 +61,6 @@ export default function ProfileScreen() {
                 onPress={handleEditProfile}
               >
                 <Text style={styles.buttonText}>Edit Profile</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: "#476BE6" }]}
-                onPress={handleLogOut}
-              >
-                <Text style={styles.buttonText}>Log out</Text>
               </TouchableOpacity>
             </View>
           </View>

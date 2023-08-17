@@ -17,15 +17,19 @@ export default function LoginScreen() {
   const [password, setPassword] = useState();
   const [loginMsg, setLoginMsg] = useState("");
 
-  const { authenticateUser, currentUser, loadMyStations } =
-    useContext(UserContext);
+  const { authenticateUser, currentUser } = useContext(UserContext);
 
   async function handleAuthenticateUser() {
     try {
       setLoginMsg("");
       setLoginMsg("Logging in...");
-      await authenticateUser(username, password);
-      currentUser ? setLoginMsg("") : setLoginMsg("Try again");
+      let loggedIn = authenticateUser(username, password);
+      if (loggedIn) {
+        setLoginMsg("");
+        navigation.navigate("TabNavigator");
+      } else {
+        setLoginMsg("Try again");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -38,7 +42,7 @@ export default function LoginScreen() {
   return (
     <View style={{ backgroundColor: "#4ECB71" }}>
       <SafeAreaView>
-        <View style={[{ backgroundColor: "#f0f8ff"}, {height:"100%"}]}>
+        <View style={[{ backgroundColor: "#f0f8ff" }, { height: "100%" }]}>
           <View style={styles.headerContainer}>
             <Text style={styles.header}>Login</Text>
             <Text style={styles.headerSmall}>
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   headerContainer: {
-    paddingTop:10,
+    paddingTop: 10,
     paddingBottom: 10,
     borderBottomColor: "#476BE6",
     borderBottomWidth: 2,

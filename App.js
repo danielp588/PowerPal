@@ -11,6 +11,7 @@ import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import MenuScreen from "./screens/MenuScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 const Stack = createStackNavigator();
 
@@ -27,9 +28,13 @@ export default function App() {
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
-          <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}/>
-          <Stack.Screen name="Menu" component={MenuScreen}/>
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen
+            name="ChangePassword"
+            component={ChangePasswordScreen}
+          />
+          <Stack.Screen name="Menu" component={MenuScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContextProvider>

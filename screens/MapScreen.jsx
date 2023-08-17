@@ -116,6 +116,7 @@ export default function Map() {
 
   const handleSearch = (query) => {
     setIsSearching(true);
+    
     if (query == "") {
       setSearchQuery([]);
       setIsSearching(false);
@@ -123,23 +124,29 @@ export default function Map() {
       return;
     }
 
-    //TODO look for city names as well, connector types, power, etc..
+    //some data is case sensitive, change all to lowercase
+
+    //all relevant stations that are found to match the query will be inserted into filteredData and shown in the search results.
     const filteredData = filter(stations, (item) => {
       return contains(item, query);
     });
+    //data found, show it on screen, else shown a msg in app
     if (filteredData.length > 0) {
       setIsFoundSearch(true);
-    }
-    else{
+    } else {
       setIsFoundSearch(false);
     }
-    console.log(filteredData.length)
-    console.log(isFoundSearch);
     setSearchQuery(filteredData);
   };
 
-  const contains = ({ name }, query) => {
-    if (name.includes(query)) {
+  const contains = ({ name, city, connector, power_supply }, query) => {
+    //looking any relevant station details that are in the query.
+    if (
+      name.includes(query) ||
+      city.includes(query) ||
+      connector.includes(query) ||
+      power_supply.includes(query)
+    ) {
       return true;
     }
     return false;
@@ -170,7 +177,7 @@ export default function Map() {
                 <View style={styles.inputBox}>
                   <TextInput
                     style={{ top: 22, left: 42 }}
-                    placeholder="Search for a station"
+                    placeholder="Search for station details..."
                     onChangeText={(query) => {
                       handleSearch(query);
                     }}
@@ -336,7 +343,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
-    width: "70%",
+    width: "80%",
     backgroundColor: "rgba(255, 255, 255, 0.9)",
   },
   inputBox: {
@@ -354,7 +361,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     padding: 10,
     borderRadius: 10,
-    maxHeight: Dimensions.get('window').height / 2
+    maxHeight: Dimensions.get("window").height / 2,
   },
   listItem: {
     padding: 8,

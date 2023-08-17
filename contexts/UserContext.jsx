@@ -27,11 +27,12 @@ export default function UserContextProvider({ children }) {
       console.log("login fetch completed status", res.status);
       if (res.status !== 200) {
         console.log("Wrong credentials after login attempt");
-        return null;
+        return false;
       } else {
         let user = await res.json();
         console.log("setting current user");
         setCurrentUser(user);
+        return true;
       }
     } catch (error) {
       console.error(error);
