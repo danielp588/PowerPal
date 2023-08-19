@@ -17,7 +17,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState();
   const [loginMsg, setLoginMsg] = useState("");
 
-  const { authenticateUser, currentUser } = useContext(UserContext);
+  const { authenticateUser } = useContext(UserContext);
 
   async function handleAuthenticateUser() {
     try {

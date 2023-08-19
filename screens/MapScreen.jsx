@@ -116,7 +116,7 @@ export default function Map() {
 
   const handleSearch = (query) => {
     setIsSearching(true);
-    
+
     if (query == "") {
       setSearchQuery([]);
       setIsSearching(false);
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   fastFindButtonShadow: {
     position: "absolute",
     zIndex: 1,
-    bottom: 0,
+    bottom: 2,
     alignSelf: "center",
     backgroundColor: "#476BE670",
     padding: 12,
