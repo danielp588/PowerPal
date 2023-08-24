@@ -6,6 +6,8 @@ export default function UserContextProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [errorMsg, setErrorMsg] = useState("");
   const [myStations, setMyStations] = useState([]);
+  const [nameChangeModalVisible, setNameChangeModalVisible] = useState(false);
+  const [stationNameChange, setStationNameChange] = useState();
 
   //user functions
   async function authenticateUser(username, password) {
@@ -220,6 +222,7 @@ export default function UserContextProvider({ children }) {
         }
       );
       let data = await res.json();
+      console.log(data)
       setMyStations(data);
       console.log("User's my stations loaded successfully");
     } catch (error) {
@@ -240,6 +243,10 @@ export default function UserContextProvider({ children }) {
     loadMyStations,
     myStations,
     deleteStation,
+    nameChangeModalVisible,
+    setNameChangeModalVisible,
+    stationNameChange,
+    setStationNameChange
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

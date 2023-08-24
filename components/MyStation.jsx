@@ -7,7 +7,12 @@ import { Linking } from "react-native";
 export default function MyStation({ station }) {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteStationActive, setDeleteStationActive] = useState(false);
-  const { deleteStation, loadMyStations } = useContext(UserContext);
+  const {
+    deleteStation,
+    loadMyStations,
+    setNameChangeModalVisible,
+    setStationNameChange,
+  } = useContext(UserContext);
 
   const toggleAccordion = () => {
     console.log(station);
@@ -19,8 +24,9 @@ export default function MyStation({ station }) {
     setDeleteStationActive(true);
   };
 
-  const handleRenameStation = () => {
-    alert("Rename station pressed.");
+  const handleRenameStation = (station) => {
+    setNameChangeModalVisible(true);
+    setStationNameChange(station);
   };
 
   const openWaze = (latitude, longitude) => {
@@ -81,18 +87,18 @@ export default function MyStation({ station }) {
             }}
           >
             <View style={styles.buttonInfo}>
-              <Ionicons  color={"white"} name="trash-outline" size={18} />
+              <Ionicons color={"white"} name="trash-outline" size={18} />
               <Text style={styles.buttonText}>Delete</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "#476BE6" }]}
             onPress={() => {
-              handleRenameStation();
+              handleRenameStation(station);
             }}
           >
             <View style={styles.buttonInfo}>
-              <Ionicons  color={"white"} name="create-outline" size={16} />
+              <Ionicons color={"white"} name="create-outline" size={16} />
               <Text style={styles.buttonText}>Rename</Text>
             </View>
           </TouchableOpacity>
@@ -104,7 +110,7 @@ export default function MyStation({ station }) {
             }}
           >
             <View style={styles.buttonInfo}>
-              <Ionicons  color={"white"} name="arrow-redo-outline" size={18} />
+              <Ionicons color={"white"} name="arrow-redo-outline" size={18} />
               <Text style={styles.buttonText}>Go there</Text>
             </View>
           </TouchableOpacity>
@@ -134,17 +140,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#070033",
     maxWidth: "90%",
-    marginRight: 5
+    marginRight: 5,
   },
   button: {
-    padding:12,
+    padding: 12,
     borderRadius: 5,
     marginTop: 10,
     borderRadius: 30,
   },
-  buttonInfo:{
-    flexDirection:"row",
-    alignItems:"center"
+  buttonInfo: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   buttonText: {
     color: "white",
@@ -152,6 +158,6 @@ const styles = StyleSheet.create({
   },
   actionsView: {
     flexDirection: "row",
-    justifyContent:"space-between"
+    justifyContent: "space-between",
   },
 });

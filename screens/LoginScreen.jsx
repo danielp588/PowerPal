@@ -19,6 +19,7 @@ export default function LoginScreen() {
 
   const { authenticateUser, currentUser } = useContext(UserContext);
 
+  //check why login msg is not shown
   async function handleAuthenticateUser() {
     try {
       setLoginMsg("");
@@ -66,7 +67,7 @@ export default function LoginScreen() {
           <View style={{ marginHorizontal: 12 }}>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: "#476BE6" }]}
-              onPress={handleAuthenticateUser}
+              onPress={()=> handleAuthenticateUser()}
             >
               <View>
                 <Text style={styles.buttontext}>Login</Text>
